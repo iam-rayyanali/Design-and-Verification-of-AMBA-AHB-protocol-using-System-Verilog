@@ -53,16 +53,16 @@ module AHB_Slave_1 #(
             if (HWRITE_reg && (HTRANS_reg == 2'b10 || HTRANS_reg == 2'b11)) begin // as the state is NONSEQ or SEQ we can write
                 // 8 bits transfer 
                 if ((HBURST_reg == 3'b000 || HBURST_reg == 3'b001) && HSIZE_reg == 3'b000) begin 
-                    memory[HADDR_reg[29:0]] <= HWDATA[7:0]; // Write 8 bits to memory
+                    memory[HADDR_reg[9:0]] <= HWDATA[7:0]; // Write 8 bits to memory
                 end 
                 // 16 bits transfer 
                 else if ((HBURST_reg == 3'b000 || HBURST_reg == 3'b001) && HSIZE_reg == 3'b001) begin // 16 bits transfer
-                    memory[HADDR_reg[29:0]] <= HWDATA[7:0]; // Write 8 bits to memory
+                    memory[HADDR_reg[9:0]] <= HWDATA[7:0]; // Write 8 bits to memory
                     memory[HADDR_Half] <= HWDATA[15:8]; // Write next 8 bits to memory
                 end 
                 // 32 bits transfer 
                 else if ((HBURST_reg == 3'b000 || HBURST_reg == 3'b001) && HSIZE_reg == 3'b010) begin // 32 bits transfer
-                    memory[HADDR_reg[29:0]] <= HWDATA[7:0]; // Write first 8 bits to memory
+                    memory[HADDR_reg[9:0]] <= HWDATA[7:0]; // Write first 8 bits to memory
                     memory[HADDR_Full_1] <= HWDATA[15:8]; // Write next 8 bits to memory
                     memory[HADDR_Full_2] <= HWDATA[23:16]; // Write next 8 bits to memory
                     memory[HADDR_Full_3] <= HWDATA[31:24]; // Write last 8 bits to memory
@@ -72,15 +72,15 @@ module AHB_Slave_1 #(
             else if (!HWRITE && (HTRANS == 2'b10 || HTRANS == 2'b11)) begin // as the state is NONSEQ or SEQ we can read
                 // 8 bits transfer 
                 if ((HBURST == 3'b000 || HBURST == 3'b001) && HSIZE == 3'b000) begin 
-                    HRDATA <= {24'h000000, memory[HADDR[29:0]]}; // Read 8 bits from memory
+                    HRDATA <= {24'h000000, memory[HADDR[9:0]]}; // Read 8 bits from memory
                 end 
                 // 16 bits transfer 
                 else if ((HBURST == 3'b000 || HBURST == 3'b001) && HSIZE == 3'b001) begin // 16 bits transfer
-                    HRDATA <= {16'h0000, memory[HADDR_Half], memory[HADDR[29:0]]}; // Read 16 bits from memory
+                    HRDATA <= {16'h0000, memory[HADDR_Half], memory[HADDR[9:0]]}; // Read 16 bits from memory
                 end 
                 // 32 bits transfer 
                 else if ((HBURST == 3'b000 || HBURST == 3'b001) && HSIZE == 3'b010)  begin // 32 bits transfer
-                    HRDATA <= {memory[HADDR_Full_3], memory[HADDR_Full_2], memory[HADDR_Full_1], memory[HADDR[29:0]]}; // Read 32 bits from memory
+                    HRDATA <= {memory[HADDR_Full_3], memory[HADDR_Full_2], memory[HADDR_Full_1], memory[HADDR[9:0]]}; // Read 32 bits from memory
                 end
             end
         end
